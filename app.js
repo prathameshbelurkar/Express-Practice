@@ -7,9 +7,10 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // ___________________________________________ MIDDLEWARE _________________________________________
-
-// Third-party middleware
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  //  Third-party middleware
+  app.use(morgan('dev'));
+}
 
 // Including middleware for res.body to access
 app.use(express.json());
