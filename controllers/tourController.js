@@ -5,6 +5,30 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+// Params middleware (Only calls when certain parameters are present in route)
+exports.checkID = (req, res, next, val) => {
+  console.log(`Tour id is :${val}`);
+  // if (!tour) {
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+};
+
+// Create the checkBody middleware function
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Missing name or price',
+    });
+  }
+  next();
+};
+
 // ________________________ HANDLING FUNCTIONS TO PERFORM CRUD OPERATIONS ___________________________
 
 // GET: all tours
@@ -26,14 +50,6 @@ exports.getTour = (req, res) => {
   // console.log(req.params);
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
-
-  // if (id > tours.length) {
-  if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
 
   res.status(200).json({
     status: 'success',
@@ -65,14 +81,6 @@ exports.createTour = (req, res) => {
 
 // PATCH
 exports.updateTour = (req, res) => {
-  // if (!tour) {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     data: {
@@ -83,14 +91,6 @@ exports.updateTour = (req, res) => {
 
 // DELETE
 exports.deleteTour = (req, res) => {
-  // if (!tour) {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  }
-
   res.status(204).json({
     status: 'success',
     data: null,
