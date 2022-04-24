@@ -61,5 +61,14 @@
   }
 }
 
+```
 
+<hr>
+
+## Prettier config files (.prettierrc) 👇
+
+```
+{
+  "singleQuote": true
+}
 ```
