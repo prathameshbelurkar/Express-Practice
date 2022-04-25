@@ -5,7 +5,7 @@ const tourController = require('./../controllers/tourController');
 const router = express.Router();
 
 // Params middleware (Only calls when certain parameters are present in route)
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 /*
 Create the checkBody middleware function
@@ -20,7 +20,7 @@ router.post(middleware, tourController.createTour); // is a example of chaining 
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 
 router
   .route('/:id')
