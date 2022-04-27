@@ -9,6 +9,8 @@ const tourSchema = new mongoose.Schema(
       required: [true, 'A tour must have a name'],
       unique: true,
       trim: true,
+      maxlength: [40, 'A tour name must have less or equal then 40 characters'],
+      minlength: [10, 'A tour name must have more or equal then 10 characters'],
     },
     slug: String,
     duration: {
@@ -22,10 +24,16 @@ const tourSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, 'A tour must have a difficulty'],
+      enum: {
+        values: ['easy', 'medium', 'difficult'],
+        message: 'Difficulty is either: easy, medium or difficult',
+      },
     },
     ratingsAverage: {
       type: Number,
       default: 4.5,
+      min: [1, 'Rating must be above 1.0'],
+      max: [5, 'Rating must be below 5.0'],
     },
     ratingsQuantity: {
       type: Number,
@@ -106,15 +114,23 @@ tourSchema.pre(/^find/, function (next) {
 // Query Middleware(post): find
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-  console.log(docs);
   next();
 });
 
+/*
 // Query Middleware: findOne
-// tourSchema.pre('find', function (next) {
-//   this.find({ secretTour: { $ne: true } });
-//   next();
-// });
+tourSchema.pre('find', function (next) {
+  this.find({ secretTour: { $ne: true } });
+  next(); 
+});
+*/
+
+// Aggregation Middleware
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline());
+  next();
+});
 
 // Creating a model from schema
 const Tour = mongoose.model('Tour', tourSchema);
