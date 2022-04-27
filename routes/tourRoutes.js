@@ -16,13 +16,16 @@ Create the checkBody middleware function
 router.post(middleware, tourController.createTour); // is a example of chaining the middleware. bcoz first the middleeare will be called and then the tourController.createTour
 */
 
-// Top-5-Cheap
+// Route to Top-5-Cheap
 router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
-// Tour Stats
+// Route to Tour Stats
 router.route('/tour-stats').get(tourController.getTourStats);
+
+// Route to Monthly Plan
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 // Listening to all  CRUD opertions: for Tours
 router
